@@ -14,7 +14,29 @@ Paquetes de instalación
 - mysql2 (para base de datos SQL)
 - zod (para validaciones)
 
-Para ejecutar el código se usa:
+## Run Locally
 
-- npm run start:mysql
-- npm run start:local
+Clone the project
+
+```bash
+  git clone https://link-to-project
+```
+
+Go to the project directory
+
+```bash
+  cd plantilla_server_nodejs
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run start:mysql
+  npm run start:local
+```
