@@ -66,14 +66,16 @@ export class SorteoModel {
       const [rows] = await connection.query("SELECT * FROM sorteo");
       const existingNumbers = rows.map((row) => row.number);
       const existingMatriculas = rows.map((row) => row.matricula);
+      console.log(existingMatriculas);
       const [id_matricula] = await connection.query(
         `SELECT id FROM afiliados WHERE matricula = ?`,
         [matricula]
       );
-
-      if (existingMatriculas.includes(id_matricula[0].id)) {
+      console.log(id_matricula);
+      if (id_matricula.length === 0)
+        return { error: "La matricula no pertenece a un afiliado" };
+      if (existingMatriculas.includes(id_matricula[0].id))
         return { error: "La matrícula ya tiene un número asignado" };
-      }
 
       // Generar número único aleatorio
       let number;
@@ -87,7 +89,6 @@ export class SorteoModel {
         [id_matricula[0].id, number]
       );
       const nuevaAsignacion = this.getByMatricula(matricula);
-      console.log(nuevaAsignacion[0][0]);
       return { error: false, data: nuevaAsignacion[0][0], ok: true };
     } catch (error) {
       console.error("Error al crear sorteo:", error);
