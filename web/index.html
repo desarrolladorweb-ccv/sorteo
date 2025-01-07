@@ -1,64 +1,136 @@
-<!--
-    Este es solo un HTML de prueba de la API REST
--->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Probar API Rest</title>
+    <title>Registro de Matrícula</title>
     <style>
-      article {
-        border: 1px solid #ccc;
-        padding: 1rem;
-        margin-bottom: 1rem;
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
 
-      img {
-        height: auto;
-        width: 320px;
-        max-width: 100%;
+      .container {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+
+      button {
+        padding: 10px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .message {
+        margin-top: 15px;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .message.success {
+        color: #28a745;
+      }
+
+      .message.error {
+        color: #dc3545;
       }
     </style>
-    <script type="module">
-      fetch("http://localhost:1234/movies")
-        .then((res) => res.json())
-        .then((movies) => {
-          const html = movies
-            .map((movie) => {
-              return `
-            <article data-id="${movie.id}">
-              <h2>${movie.title}</h2>
-              <img src="${movie.poster}" alt="${movie.title}">
-              <p>${movie.year}</p>
-
-              <button>Eliminar</button>
-            </article>
-          `;
-            })
-            .join("");
-
-          document.querySelector("main").innerHTML = html;
-
-          document.addEventListener("click", (e) => {
-            if (e.target.matches("button")) {
-              const article = e.target.closest("article");
-              const id = article.dataset.id;
-
-              fetch(`http://localhost:1234/movies/${id}`, {
-                method: "DELETE",
-              }).then((res) => {
-                if (res.ok) {
-                  article.remove();
-                }
-              });
-            }
-          });
-        });
-    </script>
   </head>
   <body>
-    <main></main>
+    <div class="container">
+      <h1>Registrar Matrícula</h1>
+      <form id="matriculaForm">
+        <label for="matricula">Matrícula:</label>
+        <input
+          type="text"
+          id="matricula"
+          name="matricula"
+          placeholder="Ingresa la matrícula"
+          required
+        />
+        <button type="submit">Registrar</button>
+      </form>
+      <div id="responseMessage" class="message"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("matriculaForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const matricula = document.getElementById("matricula").value;
+          const responseMessage = document.getElementById("responseMessage");
+
+          try {
+            const response = await fetch("http://localhost:1234/sorteo", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ matricula }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              responseMessage.textContent = `¡Matrícula registrada! Número asignado: ${data.data.number}`;
+              responseMessage.className = "message success";
+            } else {
+              responseMessage.textContent =
+                data.error || "Error al registrar la matrícula.";
+              responseMessage.className = "message error";
+            }
+          } catch (error) {
+            console.error("Error al enviar la solicitud:", error);
+            responseMessage.textContent =
+              "No se pudo conectar con el servidor.";
+            responseMessage.className = "message error";
+          }
+        });
+    </script>
   </body>
 </html>

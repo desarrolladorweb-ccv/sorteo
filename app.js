@@ -5,22 +5,25 @@
 
 */
 import express, { json } from "express"; // require -> commonJS
-import { createMovieRouter } from "./routes/movies.js";
+import { createSorteoRouter } from "./routes/sorteo.js";
+import { createAfiliadoRouter } from "./routes/afiliado.js";
 import { corsMiddleware } from "./middlewares/cors.js";
 import "dotenv/config";
+import cors from "cors";
 
 // después
-export const createApp = ({ movieModel }) => {
+export const createApp = ({ sorteoModel, afiliadoModel }) => {
   const app = express();
   app.use(json());
-  app.use(corsMiddleware());
+  app.use(cors());
   app.disable("x-powered-by");
 
-  app.use("/movies", createMovieRouter({ movieModel }));
+  app.use("/sorteo", createSorteoRouter({ sorteoModel }));
+  app.use("/afiliado", createAfiliadoRouter({ afiliadoModel }));
 
   const PORT = process.env.PORT ?? 1234;
-
+  const HOST = process.env.HOST ?? "localhost";
   app.listen(PORT, () => {
-    console.log(`server listening on port http://localhost:${PORT}`);
+    console.log(`server listening on port http://${HOST}:${PORT}`);
   });
 };

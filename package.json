@@ -2,9 +2,9 @@
   "name": "plantilla_server_nodejs",
   "version": "1.0.0",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "start:mysql": "node --watch server-with-mysql.js",
-    "start:local": "node --watch server-with-local.js",
+    "start": "node --watch server-with-mysql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

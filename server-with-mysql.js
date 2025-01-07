@@ -4,7 +4,8 @@
 */
 
 import { createApp } from "./app.js";
+import { AfiliadoModel } from "./models/mysql/afiliado.js";
 
-import { MovieModel } from "./models/mysql/movie.js";
+import { SorteoModel } from "./models/mysql/sorteo.js";
 
-createApp({ movieModel: MovieModel });
+createApp({ sorteoModel: SorteoModel, afiliadoModel:AfiliadoModel });
